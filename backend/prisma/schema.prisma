@@ -11,21 +11,34 @@ model Product {
   id          Int      @id @default(autoincrement())
   name        String
   description String?
-  price       Float
-  stock       Int
+  price       Decimal  @db.Decimal(10, 2)
+  category    String
+  imageUrl    String?
+  inStock     Boolean  @default(true)
   createdAt   DateTime @default(now())
-}
-
-model OpeningHour {
-  id        Int     @id @default(autoincrement())
-  day       String  // e.g., "Monday"
-  openTime  String
-  closeTime String
+  updatedAt   DateTime @updatedAt
+  orderItems  OrderItem[]
 }
 
 model Order {
-  id        Int      @id @default(autoincrement())
-  products  String   // JSON string of product IDs + quantities (simple for prototype)
-  collected Boolean  @default(false)
-  createdAt DateTime @default(now())
+  id              Int      @id @default(autoincrement())
+  customerName    String
+  customerEmail   String
+  customerPhone   String
+  totalAmount     Decimal  @db.Decimal(10, 2)
+  status          String   @default("pending")
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  orderItems      OrderItem[]
+}
+
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  orderId   Int
+  productId Int
+  quantity  Int
+  price     Decimal @db.Decimal(10, 2)
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id])
 }
