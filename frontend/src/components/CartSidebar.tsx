@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useCartStore } from '@/lib/store';
-import { useState } from 'react';
-import { orderApi } from '@/lib/api';
-import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
+import { useCartStore } from "@/lib/store";
+import { useState } from "react";
+import { orderApi } from "@/lib/api";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 interface CartSidebarProps {
   isOpen: boolean;
@@ -13,13 +13,14 @@ interface CartSidebarProps {
 
 export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
   const router = useRouter();
-  const { items, removeItem, updateQuantity, clearCart, getTotalPrice } = useCartStore();
+  const { items, removeItem, updateQuantity, clearCart, getTotalPrice } =
+    useCartStore();
   const [isCheckout, setIsCheckout] = useState(false);
   const [formData, setFormData] = useState({
-    customerName: '',
-    customerEmail: '',
-    customerPhone: '',
-    notes: '',
+    customerName: "",
+    customerEmail: "",
+    customerPhone: "",
+    notes: "",
   });
 
   const totalPrice = getTotalPrice();
@@ -28,7 +29,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
     e.preventDefault();
 
     if (items.length === 0) {
-      toast.error('Votre panier est vide');
+      toast.error("Votre panier est vide");
       return;
     }
 
@@ -43,23 +44,23 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
       };
 
       const order = await orderApi.create(orderData);
-      
+
       toast.success(`Commande #${order.id} créée avec succès !`);
       clearCart();
       setIsCheckout(false);
       setFormData({
-        customerName: '',
-        customerEmail: '',
-        customerPhone: '',
-        notes: '',
+        customerName: "",
+        customerEmail: "",
+        customerPhone: "",
+        notes: "",
       });
       onClose();
-      
+
       // Optionnel : rediriger vers une page de confirmation
       // router.push(`/commande/${order.id}`);
     } catch (error) {
-      toast.error('Erreur lors de la création de la commande');
-      console.error('Order error:', error);
+      toast.error("Erreur lors de la création de la commande");
+      console.error("Order error:", error);
     }
   };
 
@@ -69,7 +70,8 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
     <>
       {/* Overlay */}
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 z-50"
+        className="fixed inset-0 z-50"
+        style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
         onClick={onClose}
       />
 
@@ -79,14 +81,24 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
           {/* Header */}
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-900">
-              {isCheckout ? 'Finaliser la commande' : 'Panier'}
+              {isCheckout ? "Finaliser la commande" : "Panier"}
             </h2>
             <button
               onClick={onClose}
               className="text-gray-500 hover:text-gray-700"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
@@ -97,10 +109,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
               {items.length === 0 ? (
                 <div className="text-center py-12">
                   <p className="text-gray-500 mb-4">Votre panier est vide</p>
-                  <button
-                    onClick={onClose}
-                    className="btn-primary"
-                  >
+                  <button onClick={onClose} className="btn-primary">
                     Continuer mes achats
                   </button>
                 </div>
@@ -117,12 +126,14 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                             {item.product.name}
                           </h3>
                           <p className="text-sm text-gray-500">
-                            {item.product.price.toFixed(2)} € / unité
+                            {Number(item.product.price).toFixed(2)} € / unité
                           </p>
                         </div>
                         <div className="flex items-center space-x-2">
                           <button
-                            onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                            onClick={() =>
+                              updateQuantity(item.product.id, item.quantity - 1)
+                            }
                             className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300"
                           >
                             -
@@ -131,7 +142,9 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                             {item.quantity}
                           </span>
                           <button
-                            onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                            onClick={() =>
+                              updateQuantity(item.product.id, item.quantity + 1)
+                            }
                             className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300"
                           >
                             +
@@ -141,8 +154,18 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                           onClick={() => removeItem(item.product.id)}
                           className="text-red-500 hover:text-red-700"
                         >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
                           </svg>
                         </button>
                       </div>
@@ -153,7 +176,9 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                   <div className="border-t pt-4 mb-6">
                     <div className="flex justify-between text-lg font-bold">
                       <span>Total</span>
-                      <span className="text-primary">{totalPrice.toFixed(2)} €</span>
+                      <span className="text-primary">
+                        {Number(totalPrice).toFixed(2)} €
+                      </span>
                     </div>
                     <p className="text-sm text-gray-500 mt-2">
                       Paiement en magasin lors du retrait
@@ -168,10 +193,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                     >
                       Passer commande
                     </button>
-                    <button
-                      onClick={onClose}
-                      className="w-full btn-outline"
-                    >
+                    <button onClick={onClose} className="w-full btn-outline">
                       Continuer mes achats
                     </button>
                   </div>
@@ -189,7 +211,9 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                   type="text"
                   required
                   value={formData.customerName}
-                  onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, customerName: e.target.value })
+                  }
                   className="input-field"
                 />
               </div>
@@ -202,7 +226,9 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                   type="email"
                   required
                   value={formData.customerEmail}
-                  onChange={(e) => setFormData({ ...formData, customerEmail: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, customerEmail: e.target.value })
+                  }
                   className="input-field"
                 />
               </div>
@@ -215,7 +241,9 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                   type="tel"
                   required
                   value={formData.customerPhone}
-                  onChange={(e) => setFormData({ ...formData, customerPhone: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, customerPhone: e.target.value })
+                  }
                   className="input-field"
                 />
               </div>
@@ -227,7 +255,9 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                 <textarea
                   rows={3}
                   value={formData.notes}
-                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, notes: e.target.value })
+                  }
                   className="input-field"
                   placeholder="Instructions spéciales..."
                 />
@@ -236,7 +266,9 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
               <div className="border-t pt-4">
                 <div className="flex justify-between text-lg font-bold mb-4">
                   <span>Total</span>
-                  <span className="text-primary">{totalPrice.toFixed(2)} €</span>
+                  <span className="text-primary">
+                    {Number(totalPrice).toFixed(2)} €
+                  </span>
                 </div>
               </div>
 

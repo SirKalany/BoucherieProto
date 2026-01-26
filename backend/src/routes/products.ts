@@ -3,87 +3,49 @@ import prisma from '../lib/prisma.js';
 
 const router = Router();
 
-// POST nouvelle commande
-router.post('/', async (req, res) => {
+// GET tous les produits
+router.get('/', async (req, res) => {
   try {
-    const { customerName, customerEmail, customerPhone, items, notes } = req.body;
-
-    // Validation basique
-    if (!customerName || !customerEmail || !customerPhone || !items || items.length === 0) {
-      return res.status(400).json({ error: 'Données manquantes' });
-    }
-
-    const order = await prisma.order.create({
-      data: {
-        customerName,
-        customerEmail,
-        customerPhone,
-        notes,
-        totalAmount: 0,
-        orderItems: {
-          create: items.map((item: any) => ({
-            productId: item.productId,
-            quantity: item.quantity,
-            price: item.price
-          }))
-        }
-      },
-      include: {
-        orderItems: {
-          include: {
-            product: true
-          }
-        }
-      }
+    const products = await prisma.product.findMany({
+      where: { inStock: true },
+      orderBy: { category: 'asc' }
     });
-
-    // Calculer le total
-    const totalAmount = order.orderItems.reduce(
-      (sum, item) => sum + Number(item.price) * item.quantity,
-      0
-    );
-
-    const updatedOrder = await prisma.order.update({
-      where: { id: order.id },
-      data: { totalAmount },
-      include: {
-        orderItems: {
-          include: {
-            product: true
-          }
-        }
-      }
-    });
-
-    res.status(201).json(updatedOrder);
+    res.json(products);
   } catch (error) {
-    console.error('Error creating order:', error);
-    res.status(500).json({ error: 'Erreur lors de la création de la commande' });
+    console.error('Error fetching products:', error);
+    res.status(500).json({ error: 'Erreur lors de la récupération des produits' });
   }
 });
 
-// GET commande par ID
-router.get('/:id', async (req, res) => {
+// GET produits par catégorie
+router.get('/category/:category', async (req, res) => {
   try {
-    const order = await prisma.order.findUnique({
-      where: { id: parseInt(req.params.id) },
-      include: {
-        orderItems: {
-          include: {
-            product: true
-          }
-        }
+    const products = await prisma.product.findMany({
+      where: { 
+        category: req.params.category,
+        inStock: true 
       }
     });
-    
-    if (!order) {
-      return res.status(404).json({ error: 'Commande non trouvée' });
-    }
-    
-    res.json(order);
+    res.json(products);
   } catch (error) {
-    console.error('Error fetching order:', error);
-    res.status(500).json({ error: 'Erreur lors de la récupération de la commande' });
+    console.error('Error fetching products by category:', error);
+    res.status(500).json({ error: 'Erreur lors de la récupération des produits' });
+  }
+});
+
+// GET produit par ID
+router.get('/:id', async (req, res) => {
+  try {
+    const product = await prisma.product.findUnique({
+      where: { id: parseInt(req.params.id) }
+    });
+    if (!product) {
+      return res.status(404).json({ error: 'Produit non trouvé' });
+    }
+    res.json(product);
+  } catch (error) {
+    console.error('Error fetching product:', error);
+    res.status(500).json({ error: 'Erreur lors de la récupération du produit' });
   }
 });
 

@@ -1,20 +1,25 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useState } from 'react';
-import { useCartStore } from '@/lib/store';
-import CartSidebar from './CartSidebar';
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { useCartStore } from "@/lib/store";
+import CartSidebar from "./CartSidebar";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const getTotalItems = useCartStore((state) => state.getTotalItems);
-  const totalItems = getTotalItems();
+  const [mounted, setMounted] = useState(false);
+  const totalItems = useCartStore((state) => state.getTotalItems());
+
+  // Éviter l'hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const navigation = [
-    { name: 'Accueil', href: '/' },
-    { name: 'Produits', href: '/produits' },
-    { name: 'Contact', href: '/contact' },
+    { name: "Accueil", href: "/" },
+    { name: "Produits", href: "/produits" },
+    { name: "Contact", href: "/contact" },
   ];
 
   return (
@@ -64,7 +69,7 @@ export default function Header() {
                     d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                   />
                 </svg>
-                {totalItems > 0 && (
+                {mounted && totalItems > 0 && (
                   <span className="absolute -top-1 -right-1 bg-white text-primary text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                     {totalItems}
                   </span>
