@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+body {
+  background-color: white;
+  color: #111827;
+}
+
+/* Ajoutez ces classes pour les couleurs custom */
+.bg-primary {
+  background-color: #900019;
+}
+
+.text-primary {
+  color: #900019;
+}
+
+.bg-primary-dark {
+  background-color: #6b0013;
+}
+
+.from-primary {
+  --tw-gradient-from: #900019;
+}
+
+.to-primary-dark {
+  --tw-gradient-to: #6b0013;
+}
+
+.border-primary {
+  border-color: #900019;
+}
+
+.hover\:bg-primary:hover {
+  background-color: #900019;
+}
+
+.hover\:bg-primary-dark:hover {
+  background-color: #6b0013;
+}
+
+.hover\:text-primary:hover {
+  color: #900019;
+}
+
+/* Reste du CSS... */
+.btn-primary {
+  background-color: #900019;
+  color: white;
+  font-weight: 600;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: #6b0013;
+}
+
+.btn-secondary {
+  background-color: #839096;
+  color: white;
+  font-weight: 600;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background-color: #6a7680;
+}
+
+.btn-outline {
+  border: 2px solid #900019;
+  color: #900019;
+  font-weight: 600;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+}
+
+.btn-outline:hover {
+  background-color: #900019;
+  color: white;
+}
+
+.card {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.input-field:focus {
+  border-color: #900019;
+  box-shadow: 0 0 0 3px rgba(144, 0, 25, 0.1);
+}
+
+.section-title {
+  font-size: 2.25rem;
+  font-weight: bold;
+  color: #111827;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .section-title {
+    font-size: 3rem;
+  }
+}
