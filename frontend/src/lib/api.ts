@@ -11,32 +11,33 @@ const api = axios.create({
 });
 
 export const productApi = {
-  getAll: async (): Promise => {
+  getAll: async (): Promise<Product[]> => {
     const response = await api.get('/products');
     return response.data;
   },
 
-  getById: async (id: number): Promise => {
+  getById: async (id: number): Promise<Product> => {
     const response = await api.get(`/products/${id}`);
     return response.data;
   },
 
-  getByCategory: async (category: string): Promise => {
+  getByCategory: async (category: string): Promise<Product[]> => {
     const response = await api.get(`/products/category/${category}`);
     return response.data;
   },
 };
 
 export const orderApi = {
-  create: async (data: OrderData): Promise => {
+  create: async (data: OrderData): Promise<Order> => {
     const response = await api.post('/orders', data);
     return response.data;
   },
 
-  getById: async (id: number): Promise => {
+  getById: async (id: number): Promise<Order> => {
     const response = await api.get(`/orders/${id}`);
     return response.data;
   },
 };
+
 
 export default api;
